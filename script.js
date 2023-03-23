@@ -1,4 +1,4 @@
-window.onload = function()//fonction js qui se lance lorsque la fenêtre va s'afficher
+window.onload = function()//fonction js qui se lance lorsque la fenêtre va s'afficher (onload est un évènement)
 {
     var canvasWidth = 900; //largeur du canvas
     var canvasHeight = 600; //hauteur du canvas
@@ -17,7 +17,7 @@ window.onload = function()//fonction js qui se lance lorsque la fenêtre va s'af
         canvas.style.border = "1px solid"; // pour dessiner le tour du canvas
         document.body.appendChild(canvas); //pour faire apparaître le canvas dans html
         ctx = canvas.getContext('2d'); //le dessin sera en 2 dimensions
-        snakee = new Snake([[6,4], [5,4], [4,4]]); //positions des blocs du serpent
+        snakee = new Snake([[6,4], [5,4], [4,4]], "right"); //positions des blocs du serpent
         refreshCanvas();
     }
 
@@ -39,8 +39,10 @@ window.onload = function()//fonction js qui se lance lorsque la fenêtre va s'af
     }
 
     class Snake {
-        constructor(body) {
+        constructor(body, direction) {
             this.body = body; // corps du serpent
+            this.direction = direction;
+            
             this.draw = function () //méthode pour dessiner le serpent
             {
                 ctx.save(); //pour sauvegarder le contexte du canvas(à savoir son contenu avant de rentrer dans la fonction)
@@ -50,15 +52,82 @@ window.onload = function()//fonction js qui se lance lorsque la fenêtre va s'af
                 }
                 ctx.restore();//permet de garder le contexte comme il était avant
             };
+
             this.advance = function () // méthode pour ajouter un bloc après et supprimer le 1er
             {
                 var nextPosition = this.body[0].slice(); //variable pour définir la nouvelle position de la tête (la fonction slice permet de copier un élement)
-                nextPosition[0] += 1; // pour faire avancer la position de 1
+                switch(this.direction)
+                {
+                    case "left":
+                        nextPosition[0] -=1;
+                        break;
+                    case "right":
+                        nextPosition[0] +=1;
+                        break;
+                    case "down":
+                        nextPosition[1] +=1;
+                        break;
+                    case "up":
+                        nextPosition[1] -=1;
+                        break;
+                    default:
+                        throw("Invalid Direction");
+                }
                 this.body.unshift(nextPosition); //pour rajouter la nouvelle position du bloc
                 this.body.pop(); // permet de supprimer le dernier élément du tableau
             };
+
+            this.setDirection = function(newDirection)
+            {
+                var allowedDirections; // directions permises
+                switch(this.direction) // le switch se fait en fonction de la direction actuelle
+                {
+                    case "left":
+                    case "right":
+                        allowedDirections = ["up", "down"];
+                        break;
+                    case "down":
+                    case "up":
+                        allowedDirections = ["left", "right"];
+                        break;
+                    default:
+                        throw("Invalid Direction");
+                }
+
+                if(allowedDirections.indexOf(newDirection) > -1)
+                {
+                    this.direction = newDirection;
+                }
+            }
         }
     }
     init(); //pour exécuter la fonction init 
     
+}
+
+//onkeydown veut dire quand l'utilisation appuie sur une touche de son clavier
+document.onkeydown = function handleKeyDown(e)
+{
+    
+    var key = e.key;
+    var newDirection;
+    switch(key)
+    {
+        case 37:
+            newDirection = "left";
+            break;
+        case 38:
+            newDirection = "up";
+            break;
+        case 39:
+            newDirection = "right";
+            break;
+        case 40:
+            newDirection = "down";
+            break; 
+        default:
+            return;   
+    }
+    snakee.setDirection(newDirection);
+
 }
