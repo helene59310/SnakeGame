@@ -103,10 +103,10 @@ window.onload = function()//fonction js qui se lance lorsque la fenêtre va s'af
     
     //onkeydown veut dire quand l'utilisation appuie sur une touche de son clavier
 
-    document.onkeydown = function handleKeyDown(event)
+    document.onkeydown = function handleKeyDown(e)
     {
     
-        var key = event.key;
+        var key = e.keyCode;//keyCode est obsolète mais fonctionne encore
         var newDirection;
         switch(key)
         {
