@@ -6,6 +6,7 @@ window.onload = function()//fonction js qui se lance lorsque la fenêtre va s'af
     var ctx; // pour dessiner dans le canvas, on a besoin du contexte 
     var delay = 100;//délai en ms 
     var snakee; // variable pour créer le serpent
+    var applee;
 
     
     // fonction pour initier le canvas
@@ -18,6 +19,7 @@ window.onload = function()//fonction js qui se lance lorsque la fenêtre va s'af
         document.body.appendChild(canvas); //pour faire apparaître le canvas dans html
         ctx = canvas.getContext('2d'); //le dessin sera en 2 dimensions
         snakee = new Snake([[6,4], [5,4], [4,4]],"right"); //positions des blocs du serpent
+        applee = new Apple([10,10]);
         refreshCanvas();
     }
 
@@ -27,6 +29,7 @@ window.onload = function()//fonction js qui se lance lorsque la fenêtre va s'af
         ctx.clearRect(0,0,canvasWidth, canvasHeight);//pour effacer le précédent rectangle à chaque refresh
         snakee.advance(); // pour faire avancer le serpent
         snakee.draw(); // pour dessiner le serpent
+        applee.draw();
         setTimeout(refreshCanvas,delay);//pour rappeler la fonction refreshcanvas une fois le délai dépassé
     }
 
@@ -100,6 +103,23 @@ window.onload = function()//fonction js qui se lance lorsque la fenêtre va s'af
         }
     }
     init(); //pour exécuter la fonction init 
+
+    function Apple(position)
+    {
+        this.position = position;
+        this.draw = function()
+        {
+            ctx.save();
+            ctx.fillStyle = "#33cc33";
+            ctx.beginPath();
+            var radius = blockSize/2;
+            var x = position[0]* blockSize + radius;
+            var y = position[1]* blockSize + radius;
+            ctx.arc(x,y, radius, 0, Math.PI*2, true);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
     
     //onkeydown veut dire quand l'utilisation appuie sur une touche de son clavier
 
