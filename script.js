@@ -1,5 +1,4 @@
-window.onload = function()//fonction js qui se lance lorsque la fenêtre va s'afficher (onload est un évènement)
-{
+window.onload = function(){//fonction js qui se lance lorsque la fenêtre va s'afficher (onload est un évènement)
     var canvasWidth = 900; //largeur du canvas
     var canvasHeight = 600; //hauteur du canvas
     var blockSize = 30; //taille de chaque bloc
@@ -10,11 +9,11 @@ window.onload = function()//fonction js qui se lance lorsque la fenêtre va s'af
     var witdhInBlocks = canvasWidth/blockSize;
     var heightInBlocks = canvasHeight/blockSize;
     var score;
+    var timeout;
 
     
     // fonction pour initier le canvas
-    function init()
-    {
+    function init(){
         var canvas = document.createElement('canvas');
         canvas.width = canvasWidth; 
         canvas.height = canvasHeight;
@@ -31,22 +30,17 @@ window.onload = function()//fonction js qui se lance lorsque la fenêtre va s'af
     }
 
     //fonction pour rafraichir le canvas et faire avancer le serpent
-    function refreshCanvas()
-    {
+    function refreshCanvas(){
         snakee.advance(); // pour faire avancer le serpent
 
-        if(snakee.checkCollision())
-        {
+        if(snakee.checkCollision()){
             gameOver();
         }
-        else
-        {
-            if(snakee.isEatingApple(applee))
-            {
+        else{
+            if(snakee.isEatingApple(applee)){
                 score++;
                 snakee.eatApple = true;
-                do
-                {
+                do{
                     applee.setNewPosition();
                 }
                 while(applee.isOneSnake(snakee))
@@ -55,12 +49,11 @@ window.onload = function()//fonction js qui se lance lorsque la fenêtre va s'af
             drawScore();
             snakee.draw(); // pour dessiner le serpent
             applee.draw();
-            setTimeout(refreshCanvas,delay);//pour rappeler la fonction refreshcanvas une fois le délai dépassé
+            timeout = setTimeout(refreshCanvas,delay);//pour rappeler la fonction refreshcanvas une fois le délai dépassé
         }
     }
 
-    function gameOver()
-    {
+    function gameOver(){
         ctx.save();
         ctx.font = "bold 70px sans-serif";
         ctx.fillStyle = "#000";
@@ -78,16 +71,15 @@ window.onload = function()//fonction js qui se lance lorsque la fenêtre va s'af
         ctx.restore();
     }
 
-    function restart()
-    {
+    function restart(){
         snakee = new Snake([[6,4], [5,4], [4,4], [3,4], [2,4], [1,4]],"right"); //positions des blocs du serpent
         applee = new Apple([10,10]);
         score = 0;
+        clearTimeout(timeout);
         refreshCanvas();
     }
 
-    function drawScore()
-    {
+    function drawScore(){
         ctx.save();
         ctx.font = "bold 200px sans-serif";
         ctx.fillStyle = "gray";
@@ -99,8 +91,7 @@ window.onload = function()//fonction js qui se lance lorsque la fenêtre va s'af
         ctx.restore();
     }
     //fonction pour dessiner les blocs
-    function drawBlock(ctx, position)
-    {
+    function drawBlock(ctx, position){
         var x = position[0] * blockSize; // x du bloc X la taille du bloc
         var y = position[1] * blockSize; // y du bloc X la taille du bloc
         ctx.fillRect(x,y, blockSize, blockSize); // pour remplir un rectangle à la position x et y et il fera la taille du blockSize
@@ -152,8 +143,7 @@ window.onload = function()//fonction js qui se lance lorsque la fenêtre va s'af
 
             this.setDirection = function (newDirection) {
                 var allowedDirections; // directions permises
-                switch (this.direction) // le switch se fait en fonction de la direction actuelle
-                {
+                switch (this.direction){ // le switch se fait en fonction de la direction actuelle
                     case "left":
                     case "right":
                         allowedDirections = ["up", "down"];
@@ -165,13 +155,11 @@ window.onload = function()//fonction js qui se lance lorsque la fenêtre va s'af
                     default:
                         throw ("Invalid Direction");
                 }
-                if (allowedDirections.indexOf(newDirection) > -1) 
-                {
+                if (allowedDirections.indexOf(newDirection) > -1){
                     this.direction = newDirection;
                 }
             };
-            this.checkCollision = function()
-            {
+            this.checkCollision = function(){
                 var wallCollision = false; 
                 var snakeCollision = false;
                 var head = this.body[0];
@@ -185,30 +173,24 @@ window.onload = function()//fonction js qui se lance lorsque la fenêtre va s'af
                 var isNotBetweenHorizontalWalls = snakeX < minX || snakeX > maxX;
                 var isNotBetweenVerticals = snakeY < minY || snakeY > maxY;
 
-                if(isNotBetweenHorizontalWalls || isNotBetweenVerticals)
-                {
+                if(isNotBetweenHorizontalWalls || isNotBetweenVerticals){
                     wallCollision = true;
                 }
 
-                for(var i = 0; i<rest.length; i++)
-                {
-                    if(snakeX == rest[i][0] && snakeY == rest[i][1])
-                    {
+                for(var i = 0; i<rest.length; i++){
+                    if(snakeX == rest[i][0] && snakeY == rest[i][1]){
                         snakeCollision = true;
                     }
                 }
 
                 return wallCollision || snakeCollision;
             };
-            this.isEatingApple = function(appleToEat)
-            {
+            this.isEatingApple = function(appleToEat){
                 var head = this.body[0];
-                if(head[0] === appleToEat.position[0] && head[1] === appleToEat.position[1])
-                {
+                if(head[0] === appleToEat.position[0] && head[1] === appleToEat.position[1]){
                     return true;
                 }
-                else
-                {
+                else{
                     return false;
                 }
             };
@@ -235,14 +217,11 @@ window.onload = function()//fonction js qui se lance lorsque la fenêtre va s'af
                 var newY = Math.round(Math.random()) * (heightInBlocks - 1);
                 this.position = [newX, newY];
             };
-            this.isOneSnake = function(snakeToCheck)
-            {
+            this.isOneSnake = function(snakeToCheck) {
                 var isOneSnake = false;
 
-                for(var i = 0; i < snakeToCheck.body.length; i++)
-                {
-                    if(this.position[0] === snakeToCheck.body[i][0] && this.position[1] === snakeToCheck.body[i][1] )
-                    {
+                for(var i = 0; i < snakeToCheck.body.length; i++){
+                    if(this.position[0] === snakeToCheck.body[i][0] && this.position[1] === snakeToCheck.body[i][1] ){
                         isOneSnake = true;
                     }
                 }
@@ -254,13 +233,11 @@ window.onload = function()//fonction js qui se lance lorsque la fenêtre va s'af
 
     //onkeydown veut dire quand l'utilisation appuie sur une touche de son clavier
 
-    document.onkeydown = function handleKeyDown(e)
-    {
+    document.onkeydown = function handleKeyDown(e){
     
         var key = e.keyCode;//keyCode est obsolète mais fonctionne encore
         var newDirection;
-        switch(key)
-        {
+        switch(key){
             case 37:
                 newDirection = "left";
                 break;
