@@ -7,6 +7,8 @@ window.onload = function()//fonction js qui se lance lorsque la fenêtre va s'af
     var delay = 100;//délai en ms 
     var snakee; // variable pour créer le serpent
     var applee;
+    var witdhInBlocks = canvasWidth/blockSize;
+    var heightInBlocks = canvasHeight/blockSize;
 
     
     // fonction pour initier le canvas
@@ -93,13 +95,25 @@ window.onload = function()//fonction js qui se lance lorsque la fenêtre va s'af
                     default:
                         throw ("Invalid Direction");
                 }
-
                 if (allowedDirections.indexOf(newDirection) > -1) 
                 {
                     this.direction = newDirection;
                 }
-
             };
+            this.checkCollision = function()
+            {
+                var wallCollision = false;
+                var snakeCollision = false;
+                var head = this.body[0];
+                var rest = this.body.slice(1);
+                var snakeX = head[0];
+                var snakeY = head[1];
+                var minX = 0;
+                var minY = 0;
+                var maxX = witdhInBlocks - 1;
+                var maxY = heightInBlocks - 1;
+
+            }
         }
     }
     init(); //pour exécuter la fonction init 
