@@ -23,7 +23,7 @@ window.onload = function(){//fonction js qui se lance lorsque la fenêtre va s'a
         canvas.style.backgroundColor = "#ddd";
         document.body.appendChild(canvas); //pour faire apparaître le canvas dans html
         ctx = canvas.getContext('2d'); //le dessin sera en 2 dimensions
-        snakee = new Snake([[6,4], [5,4], [4,4], [3,4], [2,4], [1,4]],"right"); //positions des blocs du serpent
+        snakee = new Snake([[6,4], [5,4], [4,4], [3,4]],"right"); //positions des blocs du serpent
         applee = new Apple([10,10]);
         score = 0;
         refreshCanvas();
@@ -72,7 +72,7 @@ window.onload = function(){//fonction js qui se lance lorsque la fenêtre va s'a
     }
 
     function restart(){
-        snakee = new Snake([[6,4], [5,4], [4,4], [3,4], [2,4], [1,4]],"right"); //positions des blocs du serpent
+        snakee = new Snake([[6,4], [5,4], [4,4], [3,4]],"right"); //positions des blocs du serpent
         applee = new Apple([10,10]);
         score = 0;
         clearTimeout(timeout);
@@ -213,8 +213,8 @@ window.onload = function(){//fonction js qui se lance lorsque la fenêtre va s'a
                 ctx.restore();
             };
             this.setNewPosition = function () {
-                var newX = Math.round(Math.random()) * (witdhInBlocks - 1);
-                var newY = Math.round(Math.random()) * (heightInBlocks - 1);
+                var newX = Math.round(Math.random() * (witdhInBlocks - 1));
+                var newY = Math.round(Math.random() * (heightInBlocks - 1));
                 this.position = [newX, newY];
             };
             this.isOneSnake = function(snakeToCheck) {
